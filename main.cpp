@@ -1,16 +1,33 @@
-#include <iostream>
+#include <cassert>
+#include <cmath>
+#include "AdjacencyListUndirectedGraph.h"
+using namespace std;
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
-
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+// function that returns M(k,g)
+// (the Moore Bound for a k-regular graph with girth g)
+/*
+int getMooreBound(int k, int g) {
+    assert (g > 2);
+    if (g % 2 == 0) {
+        return (2 * pow(k - 1, g / 2) - 2) / (k - 2);
+    } else if (g % 2 == 1) {
+        return (k * pow(k - 1, (g - 1) / 2) - 2) / (k - 2);
     }
+}
+*/
+
+
+
+int main() {
+    AdjacencyListUndirectedGraph g(10);
+    for (int i = 0; i < 7; i++) {
+        g.addEdge(i, i + 1);
+        g.addEdge(i, i + 2);
+        g.addEdge(i, i + 3);
+    }
+    g.print();
 
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
+
+
