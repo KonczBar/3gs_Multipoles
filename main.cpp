@@ -1,5 +1,7 @@
 #include <cassert>
 #include <cmath>
+#include <cstdio>
+
 #include "AdjacencyListUndirectedGraph.h"
 using namespace std;
 
@@ -26,6 +28,7 @@ int main() {
         g.addEdge(i, i + 3);
     }
     g.print();
+    printf("vertices: %d, undirected edges: %d \n", g.getVertexCount(), g.getUndirectedEdgeCount());
 
     return 0;
 }

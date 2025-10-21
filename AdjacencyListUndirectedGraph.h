@@ -10,6 +10,15 @@
 using namespace std;
 
 
+/* Graph class for the project */
+
+/*      Has a variable size
+ *      May contain semiedges (denoted as -1 in the adjacency list)
+ *
+ */
+
+
+
 class AdjacencyListUndirectedGraph {
 private:
     int size;
@@ -23,7 +32,7 @@ public:
     virtual void addVertices(int u);
     virtual void print();
     virtual int getVertexCount();
-    //virtual int getUndirectedEdgeCount() = 0;
+    virtual int getUndirectedEdgeCount();
 };
 
 
