@@ -12,14 +12,18 @@ using namespace std;
 
 class AdjacencyListUndirectedGraph {
 private:
-    int n;
+    int size;
     vector<int> degrees;
     vector<int*> adjacencyList;
+
 public:
-    explicit AdjacencyListUndirectedGraph(int initialSize);
-    virtual ~AdjacencyListUndirectedGraph() = default;
+    explicit AdjacencyListUndirectedGraph();
+    virtual ~AdjacencyListUndirectedGraph();
     virtual void addEdge(int u, int v);
+    virtual void addVertices(int u);
     virtual void print();
+    virtual int getVertexCount();
+    //virtual int getUndirectedEdgeCount() = 0;
 };
 
 

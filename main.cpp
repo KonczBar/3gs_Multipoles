@@ -17,9 +17,9 @@ int getMooreBound(int k, int g) {
 */
 
 
-
+//TODO oh good its broken :))))
 int main() {
-    AdjacencyListUndirectedGraph g(10);
+    AdjacencyListUndirectedGraph g;
     for (int i = 0; i < 7; i++) {
         g.addEdge(i, i + 1);
         g.addEdge(i, i + 2);
