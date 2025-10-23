@@ -19,13 +19,11 @@ int getMooreBound(int k, int g) {
 */
 
 
-//TODO oh good its broken :))))
+
 int main() {
     AdjacencyListUndirectedGraph g;
     for (int i = 0; i < 7; i++) {
         g.addEdge(i, i + 1);
-        g.addEdge(i, i + 2);
-        g.addEdge(i, i + 3);
     }
     g.print();
     printf("vertices: %d, undirected edges: %d \n", g.getVertexCount(), g.getUndirectedEdgeCount());

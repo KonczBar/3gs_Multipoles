@@ -49,17 +49,17 @@ void AdjacencyListUndirectedGraph::addVertices(const int u) {
 }
 
 
+
 // Add Edge
 //  adds an edge between vertices u and v
 //  if one or more vertices don't exist, expands the graph to fit them
 void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
-    // assert(degrees.at(u) <= 3 && degrees.at(v) <= 3 && "Error: vertex degree too high");
-    // assert(u < n && v < n && "Error: vertex overflow");
     assert(u != v && "Error: Edge between v and v not allowed");
 
     // if uninitialized, initializes arrays that can hold up to 3 neighbouring vertices
     // (enough for 3-reg graph)
     addVertices(max(u,v));
+    assert(degrees.at(u) <= 3 && degrees.at(v) <= 3 && "Error: vertex degree too high");
 
     // write edge to adjacency list
     adjacencyList.at(u)[degrees[u]] = v;
@@ -70,11 +70,16 @@ void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
     degrees.at(v)++;
 }
 
+
+
 // Get Vertex Count
 //  returns number of vertices
 int AdjacencyListUndirectedGraph::getVertexCount() {
     return size;
 }
+
+
+
 
 /* DEBUG FUNCTIONS */
 
