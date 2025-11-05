@@ -4,6 +4,7 @@
 
 #include <set>
 #include <cassert>
+#include <stdexcept>
 #include <cstdio>
 #include <vector>
 #include "AdjacencyListUndirectedGraph.h"
@@ -28,7 +29,10 @@ AdjacencyListUndirectedGraph::~AdjacencyListUndirectedGraph() {
 //  adds all vertices up to and including u
 //  if u already exists, it does nothing
 void AdjacencyListUndirectedGraph::addVertices(const int u) {
-    assert(u >= 0);
+    //assert(u >= 0);
+    if (u < 0) {
+        throw invalid_argument("Attempted to add vertex of negative value");
+    }
 
     // if u is present, does nothing
     if (adjacencyList.size() > u) {
@@ -54,12 +58,19 @@ void AdjacencyListUndirectedGraph::addVertices(const int u) {
 //  adds an edge between vertices u and v
 //  if one or more vertices don't exist, expands the graph to fit them
 void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
-    assert(u != v && "Error: Edge between v and v not allowed");
+    if (u == v) {
+        throw invalid_argument("Attempted to add edge between v and v");
+    }
 
     // if uninitialized, initializes arrays that can hold up to 3 neighbouring vertices
     // (enough for 3-reg graph)
     addVertices(max(u,v));
-    assert(degrees.at(u) <= 3 && degrees.at(v) <= 3 && "Error: vertex degree too high");
+
+    if (degrees.at(u) == 3 || degrees.at(v) == 3) {
+        throw runtime_error("Attempted to add 4th incident edge - invalid for 3-regular graph");
+    }
+
+
 
     // write edge to adjacency list
     adjacencyList.at(u)[degrees[u]] = v;

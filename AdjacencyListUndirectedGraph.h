@@ -14,9 +14,8 @@ using namespace std;
 
 /*      Has a variable size
  *      May contain semiedges (denoted as -1 in the adjacency list)
- *
+ *      Allows at most degree 3 for vertices
  */
-
 
 
 class AdjacencyListUndirectedGraph {
