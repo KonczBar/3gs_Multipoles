@@ -17,9 +17,9 @@ AdjacencyListUndirectedGraph::AdjacencyListUndirectedGraph() {
 
 // Destructor
 AdjacencyListUndirectedGraph::~AdjacencyListUndirectedGraph() {
-    for (int i = 0; i < adjacencyList.size(); i++) {
-        delete[] adjacencyList.back();
-        adjacencyList.pop_back();
+    for (int i = 0; i < adjacency_list.size(); i++) {
+        delete[] adjacency_list.back();
+        adjacency_list.pop_back();
     }
 }
 
@@ -35,19 +35,19 @@ void AdjacencyListUndirectedGraph::addVertices(const int u) {
     }
 
     // if u is present, does nothing
-    if (adjacencyList.size() > u) {
+    if (adjacency_list.size() > u) {
         return;
     }
 
     // if vertices before u are missing, adds them
-    if (adjacencyList.size() < u) {
+    if (adjacency_list.size() < u) {
         addVertices(u - 1);
     }
 
-    assert(adjacencyList.size() == u);
+    assert(adjacency_list.size() == u);
 
     // allocates new edges, pushes degree, increments graph size
-    adjacencyList.push_back(new int[3]);
+    adjacency_list.push_back(new int[3]);
     degrees.push_back(0);
     size++;
 }
@@ -73,8 +73,8 @@ void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
 
 
     // write edge to adjacency list
-    adjacencyList.at(u)[degrees[u]] = v;
-    adjacencyList.at(v)[degrees[v]] = u;
+    adjacency_list.at(u)[degrees[u]] = v;
+    adjacency_list.at(v)[degrees[v]] = u;
 
     // increment degrees of u and v
     degrees.at(u)++;
@@ -101,7 +101,7 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() {
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < degrees.at(i); j++) {
-            if (adjacencyList.at(i)[j] != -1) {
+            if (adjacency_list.at(i)[j] != -1) {
                 edgeCount++;
             }
         }
@@ -120,7 +120,7 @@ void AdjacencyListUndirectedGraph::print() {
     for (int i = 0; i < size; i++) {
         printf("%d: ", i);
         for (int j = 0; j < degrees.at(i); j++) {
-            printf("%d ", adjacencyList.at(i)[j]);
+            printf("%d ", adjacency_list.at(i)[j]);
         }
         printf("\n");
     }

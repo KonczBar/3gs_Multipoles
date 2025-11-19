@@ -22,7 +22,7 @@ class AdjacencyListUndirectedGraph {
 private:
     int size;
     vector<int> degrees;
-    vector<int*> adjacencyList;
+    vector<int*> adjacency_list;
 
 public:
     explicit AdjacencyListUndirectedGraph();
