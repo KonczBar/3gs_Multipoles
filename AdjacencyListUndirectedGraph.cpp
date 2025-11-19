@@ -85,7 +85,7 @@ void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
 
 // Get Vertex Count
 //  returns number of vertices
-int AdjacencyListUndirectedGraph::getVertexCount() {
+int AdjacencyListUndirectedGraph::getVertexCount() const {
     return size;
 }
 
@@ -96,7 +96,7 @@ int AdjacencyListUndirectedGraph::getVertexCount() {
 
 // Get Undirected Edge Count
 //  Semiedges do not count towards the total
-int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() {
+int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
     int edgeCount = 0;
 
     for (int i = 0; i < size; i++) {
@@ -113,9 +113,33 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() {
 }
 
 
+
+// recursively add all child nodes
+void CompleteBinaryTree::addChildren(const int vertex, const int depth) {
+    if (depth == max_depth) {
+        return;
+    }
+
+    const int left = 2 * vertex + 1;
+    const int right = 2 * vertex + 2;
+    this->addEdge(vertex, left);
+    addChildren(left, depth + 1);
+
+    this->addEdge(vertex, right);
+    addChildren(right, depth + 1);
+
+}
+
+CompleteBinaryTree::CompleteBinaryTree(const int max_depth) {
+    this->max_depth = max_depth;
+    this->AdjacencyListUndirectedGraph::addVertices(0);
+    this->addChildren(0, 0);
+}
+
+
 // Print Graph
 //  for testing purposes
-void AdjacencyListUndirectedGraph::print() {
+void AdjacencyListUndirectedGraph::print() const {
 
     for (int i = 0; i < size; i++) {
         printf("%d: ", i);

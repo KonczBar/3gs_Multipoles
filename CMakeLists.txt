@@ -119,3 +119,19 @@ add_executable(skipTest4 tests/IteratorTest/SkipTest4.cpp
         IntervalSkippingIterator.h)
 add_test(skipTest4 skipTest4)
 set_tests_properties(skipTest4 PROPERTIES PASS_REGULAR_EXPRESSION ^0\n)
+
+
+# tests for complete binary tree - dependant on adjacency list undirected graph
+
+add_executable(binTreeTest1 tests/GraphTest/BinTreeTest1.cpp
+        AdjacencyListUndirectedGraph.cpp
+        AdjacencyListUndirectedGraph.h)
+add_test(binTreeTest1 binTreeTest1)
+set_tests_properties(binTreeTest1 PROPERTIES PASS_REGULAR_EXPRESSION ^1\n)
+
+
+add_executable(binTreeTest2 tests/GraphTest/BinTreeTest2.cpp
+        AdjacencyListUndirectedGraph.h
+        AdjacencyListUndirectedGraph.cpp)
+add_test(binTreeTest2 binTreeTest2)
+set_tests_properties(binTreeTest2 PROPERTIES PASS_REGULAR_EXPRESSION ^15\n)
