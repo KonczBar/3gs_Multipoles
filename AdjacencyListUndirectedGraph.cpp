@@ -90,10 +90,6 @@ int AdjacencyListUndirectedGraph::getVertexCount() const {
 }
 
 
-
-
-/* DEBUG FUNCTIONS */
-
 // Get Undirected Edge Count
 //  Semiedges do not count towards the total
 int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
@@ -112,6 +108,8 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
     return edgeCount / 2;
 }
 
+
+
 /* creates a complete binary tree within g so that:
 * the 'root' is vertex
 * all leaves are max_depth distance from root
@@ -123,6 +121,11 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
 *
 * does not explicitly throw errors if the vertices to be included already exist
 * but if such a vertex is within the middle of the tree, it will inevitably result in one due to the max 3-reg rule
+*
+* as per the mechanisms of vertex addition, if the vertex is higher than current vertex count, the preceding vertices
+* are implicitly created as vertices with 0 edges
+*
+* TODO: more tests in the future
 */
 
 int AdjacencyListUndirectedGraph::addBinarySubtree(const int vertex, const int offset, const int depth, const int max_depth) {

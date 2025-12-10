@@ -56,6 +56,27 @@ add_test(graphTest6 graphTest6)
 set_tests_properties(graphTest6 PROPERTIES PASS_REGULAR_EXPRESSION "0 10")
 
 
+add_executable(graphBinTest1 tests/GraphTest/GraphBinTest1.cpp
+        AdjacencyListUndirectedGraph.cpp
+        AdjacencyListUndirectedGraph.h)
+add_test(graphBinTest1 graphBinTest1)
+set_tests_properties(graphBinTest1 PROPERTIES PASS_REGULAR_EXPRESSION ^0\n)
+
+
+add_executable(graphBinTest2 tests/GraphTest/GraphBinTest2.cpp
+        AdjacencyListUndirectedGraph.h
+        AdjacencyListUndirectedGraph.cpp)
+add_test(graphBinTest2 graphBinTest2)
+set_tests_properties(graphBinTest2 PROPERTIES PASS_REGULAR_EXPRESSION "^7 6\n")
+
+
+add_executable(graphBinTest3 tests/GraphTest/GraphBinTest3.cpp
+        AdjacencyListUndirectedGraph.cpp
+        AdjacencyListUndirectedGraph.h)
+add_test(graphBinTest3 graphBinTest3)
+set_tests_properties(graphBinTest3 PROPERTIES PASS_REGULAR_EXPRESSION "^12 6\n")
+
+
 # tests for range set and range skipping iterator
 
 add_executable(rangeTest1 tests/IteratorTest/RangeTest1.cpp
@@ -135,3 +156,4 @@ add_executable(binTreeTest2 tests/GraphTest/BinTreeTest2.cpp
         AdjacencyListUndirectedGraph.cpp)
 add_test(binTreeTest2 binTreeTest2)
 set_tests_properties(binTreeTest2 PROPERTIES PASS_REGULAR_EXPRESSION ^15\n)
+
