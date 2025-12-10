@@ -17,12 +17,30 @@ AdjacencyListUndirectedGraph::AdjacencyListUndirectedGraph() {
 
 // Destructor
 AdjacencyListUndirectedGraph::~AdjacencyListUndirectedGraph() {
-    for (int i = 0; i < adjacency_list.size(); i++) {
+    while (!adjacency_list.empty()) {
         delete[] adjacency_list.back();
         adjacency_list.pop_back();
     }
 }
 
+// Has Edge
+//  checks if edge exists between u and v
+bool AdjacencyListUndirectedGraph::hasEdge(const int u, const int v) const {
+    // one or more vertex doesn't exist
+    if (u >= size || v >= size) {
+        return false;
+    }
+
+    // searches neighbours of u for v
+    // assumes that self is undirected (if it somehow isn't, something has gone terribly wrong)
+    for (int i = 0; i < degrees.at(u); i++) {
+        if (adjacency_list.at(u)[i] == v) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 
 // Add Vertices

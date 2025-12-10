@@ -56,6 +56,13 @@ add_test(graphTest6 graphTest6)
 set_tests_properties(graphTest6 PROPERTIES PASS_REGULAR_EXPRESSION "0 10")
 
 
+add_executable(graphTest7 tests/GraphTest/GraphTest7.cpp
+        AdjacencyListUndirectedGraph.h
+        AdjacencyListUndirectedGraph.cpp)
+add_test(graphTest7 graphTest7)
+set_tests_properties(graphTest7 PROPERTIES WILL_FAIL FALSE)
+
+
 add_executable(graphBinTest1 tests/GraphTest/GraphBinTest1.cpp
         AdjacencyListUndirectedGraph.cpp
         AdjacencyListUndirectedGraph.h)
