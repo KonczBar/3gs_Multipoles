@@ -90,10 +90,6 @@ int AdjacencyListUndirectedGraph::getVertexCount() const {
 }
 
 
-
-
-/* DEBUG FUNCTIONS */
-
 // Get Undirected Edge Count
 //  Semiedges do not count towards the total
 int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
@@ -114,6 +110,41 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
 
 
 
+/* creates a complete binary tree within g so that:
+* the 'root' is vertex
+* all leaves are max_depth distance from root
+* if vertex is the 'parent' of left and right, the following applies:
+* left = 2 * (vertex - offset) + 1 + offset = 2 * vertex + 1 - offset
+* right = 2 * (vertex - offset) + 2 + offset = 2 * vertex + 2 - offset
+*
+* return value: size of the tree
+*
+* does not explicitly throw errors if the vertices to be included already exist
+* but if such a vertex is within the middle of the tree, it will inevitably result in one due to the max 3-reg rule
+*
+* as per the mechanisms of vertex addition, if the vertex is higher than current vertex count, the preceding vertices
+* are implicitly created as vertices with 0 edges
+*
+* TODO: more tests in the future
+*/
+
+int AdjacencyListUndirectedGraph::addBinarySubtree(const int vertex, const int offset, const int depth, const int max_depth) {
+    if (depth == max_depth) {
+        return 1;
+    }
+
+    const int left = 2 * vertex + 1 - offset;
+    this->addEdge(vertex, left);
+    const int left_size = addBinarySubtree(left, offset, depth + 1, max_depth);
+
+    const int right = 2 * vertex + 2 - offset;
+    this->addEdge(vertex, right);
+    const int right_size = addBinarySubtree(right, offset, depth + 1, max_depth);
+
+    return left_size + right_size + 1;
+}
+
+
 // recursively add all child nodes
 void CompleteBinaryTree::addChildren(const int vertex, const int depth) {
     if (depth == max_depth) {
@@ -132,7 +163,7 @@ void CompleteBinaryTree::addChildren(const int vertex, const int depth) {
 
 CompleteBinaryTree::CompleteBinaryTree(const int max_depth) {
     this->max_depth = max_depth;
-    this->AdjacencyListUndirectedGraph::addVertices(0);
+    this->addVertices(0);
     this->addChildren(0, 0);
 }
 

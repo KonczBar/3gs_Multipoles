@@ -32,10 +32,11 @@ public:
     void print() const;
     [[nodiscard]] int getVertexCount() const;
     [[nodiscard]] int getUndirectedEdgeCount() const;
+    int addBinarySubtree(int vertex, int offset, int depth, int max_depth);
 };
 
 
-/* Complete binary tree
+/* Complete binary tree - PROBABLY DEPRECATED
  * creates a complete binary tree that has all its leaves in depth d
  * 'root' is 0 (it has one free edge)
  * 'leaves' in depth d have 2 free edges
