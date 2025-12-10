@@ -31,9 +31,13 @@ private:
 public:
     AdjacencyListUndirectedGraph();
     ~AdjacencyListUndirectedGraph();
-    bool hasEdge(int u, int v) const;
+    [[nodiscard]] bool hasEdge(int u, int v) const;
+    int semiEdgeCount(int v) const;
     void addEdge(int u, int v); // expands graph so that u and v exist
+    void addSemiEdge(int v);
     void addVertices(int u); // adds all vertices up to and including u
+    void cutEdge(int u, int v) const;
+    void joinSemiEdges(int u, int v) const;
     void print() const;
     [[nodiscard]] int getVertexCount() const;
     [[nodiscard]] int getUndirectedEdgeCount() const;

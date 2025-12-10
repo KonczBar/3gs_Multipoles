@@ -62,6 +62,12 @@ add_executable(graphTest7 tests/GraphTest/GraphTest7.cpp
 add_test(graphTest7 graphTest7)
 set_tests_properties(graphTest7 PROPERTIES WILL_FAIL FALSE)
 
+add_executable(graphTest8 tests/GraphTest/GraphTest8.cpp
+        AdjacencyListUndirectedGraph.cpp
+        AdjacencyListUndirectedGraph.h)
+add_test(graphTest8 graphTest8)
+set_tests_properties(graphTest8 PROPERTIES WILL_FAIL TRUE)
+
 
 add_executable(graphBinTest1 tests/GraphTest/GraphBinTest1.cpp
         AdjacencyListUndirectedGraph.cpp
@@ -163,4 +169,3 @@ add_executable(binTreeTest2 tests/GraphTest/BinTreeTest2.cpp
         AdjacencyListUndirectedGraph.cpp)
 add_test(binTreeTest2 binTreeTest2)
 set_tests_properties(binTreeTest2 PROPERTIES PASS_REGULAR_EXPRESSION ^15\n)
-
