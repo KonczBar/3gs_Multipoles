@@ -15,6 +15,10 @@ using namespace std;
 /*      Has a variable size
  *      May contain semiedges (denoted as -1 in the adjacency list)
  *      Allows at most degree 3 for vertices
+ *
+ *      degrees[i] is the degree of vertex i
+ *      adjacency_list[i] points to a 3-length int array corresponding to neighbours of vertex i
+ *          elements indexed over degree[i] - 1 are arbitrary
  */
 
 
@@ -27,8 +31,13 @@ private:
 public:
     AdjacencyListUndirectedGraph();
     ~AdjacencyListUndirectedGraph();
+    [[nodiscard]] bool hasEdge(int u, int v) const;
+    int semiEdgeCount(int v) const;
     void addEdge(int u, int v); // expands graph so that u and v exist
+    void addSemiEdge(int v);
     void addVertices(int u); // adds all vertices up to and including u
+    void cutEdge(int u, int v) const;
+    void joinSemiEdges(int u, int v) const;
     void print() const;
     [[nodiscard]] int getVertexCount() const;
     [[nodiscard]] int getUndirectedEdgeCount() const;
