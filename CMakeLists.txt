@@ -89,6 +89,11 @@ add_executable(graphBinTest3 tests/GraphTest/GraphBinTest3.cpp
 add_test(graphBinTest3 graphBinTest3)
 set_tests_properties(graphBinTest3 PROPERTIES PASS_REGULAR_EXPRESSION "^12 6\n")
 
+add_executable(graphSemiTest1 tests/GraphTest/GraphSemiTest1.cpp
+    AdjacencyListUndirectedGraph.h
+    AdjacencyListUndirectedGraph.cpp)
+add_test(graphSemiTest1 graphSemiTest1)
+set_tests_properties(graphSemiTest1 graphSemiTest1 PROPERTIES PASS_REGULAR_EXPRESSION "^0 3\n")
 
 # tests for range set and range skipping iterator
 

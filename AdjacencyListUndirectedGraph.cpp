@@ -48,7 +48,6 @@ bool AdjacencyListUndirectedGraph::hasEdge(const int u, const int v) const {
 
 // Semi-edge Count
 //  Returns number of semi-edges incident to v
-// TODO: test
 int AdjacencyListUndirectedGraph::semiEdgeCount(const int v) const {
     if (v < 0) {
         throw invalid_argument("Vertex cannot be negative");
@@ -197,7 +196,6 @@ void AdjacencyListUndirectedGraph::addEdge(const int u, const int v) {
 // Add Semi-edge
 //  Adds a semi-edge to vertex v, represented as an edge to -1
 //  Normal rules for edges apply, degree cannot be over 3
-// TODO: test
 void AdjacencyListUndirectedGraph::addSemiEdge(const int v) {
     if (v < 0) {
         throw invalid_argument("Vertex cannot be negative");
