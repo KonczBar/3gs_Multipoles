@@ -102,7 +102,6 @@ void AdjacencyListUndirectedGraph::addVertices(const int u) {
 // Cut Edge
 //  Replaces edge from u to v with u to -1
 //  Replaces edge from v to u with v to -1
-// TODO: test
 void AdjacencyListUndirectedGraph::cutEdge(const int u, const int v) const {
     if (!hasEdge(u, v)) {
         throw invalid_argument("Cannot cut edge between u and v: it does not exist");
@@ -129,9 +128,8 @@ void AdjacencyListUndirectedGraph::cutEdge(const int u, const int v) const {
 // Join Semi-Edges
 //  Replaces semi-edge of u with edge to v
 //  Replaces semi-edge of v with edge to u
-// TODO: test
 void AdjacencyListUndirectedGraph::joinSemiEdges(const int u, const int v) const {
-    if (!hasEdge(u,v)) {
+    if (hasEdge(u,v)) {
         throw invalid_argument("Cannot join semi-edges of u and v: Edge between u and v already exists");
     }
 
@@ -249,6 +247,9 @@ int AdjacencyListUndirectedGraph::getUndirectedEdgeCount() const {
 * if vertex is the 'parent' of left and right, the following applies:
 * left = 2 * (vertex - offset) + 1 + offset = 2 * vertex + 1 - offset
 * right = 2 * (vertex - offset) + 2 + offset = 2 * vertex + 2 - offset
+*
+* the created tree contains vertices that are numerically adjacent
+* offset should be specified if root is not 0
 *
 * return value: size of the tree
 *

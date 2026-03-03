@@ -8,6 +8,7 @@
 #include "../../AdjacencyListUndirectedGraph.h"
 
 int main() {
+    // testing addSemiEdge, semiEdgeCount
     AdjacencyListUndirectedGraph g;
     printf("%d ", g.semiEdgeCount(0));
 

@@ -95,6 +95,12 @@ add_executable(graphSemiTest1 tests/GraphTest/GraphSemiTest1.cpp
 add_test(graphSemiTest1 graphSemiTest1)
 set_tests_properties(graphSemiTest1 graphSemiTest1 PROPERTIES PASS_REGULAR_EXPRESSION "^0 3\n")
 
+add_executable(graphSemiTest2 tests/GraphTest/GraphSemiTest2.cpp
+        AdjacencyListUndirectedGraph.h
+        AdjacencyListUndirectedGraph.cpp)
+add_test(graphSemiTest2 graphSemiTest2)
+set_tests_properties(graphSemiTest2 graphSemiTest2 PROPERTIES PASS_REGULAR_EXPRESSION "^0 1 1 2\n")
+
 # tests for range set and range skipping iterator
 
 add_executable(rangeTest1 tests/IteratorTest/RangeTest1.cpp
