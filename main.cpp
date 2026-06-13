@@ -1,7 +1,7 @@
 #include <cassert>
 #include <deque>
 #include <iostream>
-#include <limits.h>
+#include <climits>
 #include <unordered_set>
 #include <vector>
 
@@ -67,51 +67,47 @@ void print_graph(vector<vector<int>>* v) {
     }
 }
 
-void make_edge(int from, int to, vector<vector<int>>* v, vector<int>* d, int* s) {
-    assert(d->at(from) < 3);
+void make_edge(int from, int to, vector<vector<int>>* v, int* s) {
     assert(v->at(from).size() < 3);
 
     v->at(from).push_back(to);
-    d->at(from)++;
-
     if (to == SEMIEDGE) {
         (*s)--;
         assert(*s >= 0);
     } else {
         v->at(to).push_back(from);
-        d->at(to)++;
     }
 }
 
-int undo_edge(int from, vector<vector<int>>* v, vector<int>* d, int* s) {
-    assert(d->at(from) > 0);
-    assert(d->at(from) > 0);
-
+int undo_edge(int from, vector<vector<int>>* v, int* s) {
     int to = v->at(from).back();
     v->at(from).pop_back();
-    d->at(from)--;
 
     if (to == SEMIEDGE) {
         (*s)++;
     } else {
         v->at(to).pop_back();
-        d->at(to)--;
     }
 
     return to;
 }
 
-void recursion(const int G, const int N, int s, int p, int min_next, vector<vector<int>>* v, vector<int>* d) {
-    while (d->at(p) == 3) {
+void recursion(const int G, const int N, const int S, int s, int p, int min_next, vector<vector<int>>* v) {
+    while (v->at(p).size() == 3) {
         p++;
         min_next = p + 1;
         if (p == N) {
             if (s == 0) {
-                cout << "Success" << endl;
+                cout << "Graph found:" << endl;
                 print_graph(v);
             }
             return;
         }
+    }
+
+    // no free stubs left for remaining semi-edges
+    if (3 * N - 2 * (3 * (p - 1) + v->at(p).size()) + S - s < s) {
+        return;
     }
 
     //int next = p + 1;
@@ -126,18 +122,18 @@ void recursion(const int G, const int N, int s, int p, int min_next, vector<vect
             }
         }
 
-        if (d->at(next) < 3) {
+        if (v->at(next).size() < 3) {
 
             // the key here is that since no illegal cycles existed before the addition of the edge
             // any newly formed illegal cycles must include the source vertex
-            make_edge(p, next, v, d, &s);
+            make_edge(p, next, v, &s);
             if (check_girth(p, G, v)) {
-                recursion(G, N, s, p, next + 1, v, d);
+                recursion(G, N, S, s, p, next, v);
             }
-            undo_edge(p, v, d, &s);
+            undo_edge(p, v, &s);
 
             // vertex was added - after this it would just make isomorphic graphs
-            if (d->at(next) == 0) {
+            if (v->at(next).size() == 0) {
                 break;
             }
         }
@@ -154,9 +150,9 @@ void recursion(const int G, const int N, int s, int p, int min_next, vector<vect
             }
         }
 
-        make_edge(p, SEMIEDGE, v, d, &s);
-        recursion(G, N, s, p, next, v, d);
-        undo_edge(p, v, d, &s);
+        make_edge(p, SEMIEDGE, v, &s);
+        recursion(G, N, S, s, p, next, v);
+        undo_edge(p, v, &s);
     }
 }
 
@@ -174,7 +170,7 @@ void start (const int G, const int S, const int N) {
         v.at(i).reserve(3);
     }
 
-    recursion(G, N, S, 0, 1, &v, &d);
+    recursion(G, N, S, S, 0, 1, &v);
 }
 
 
@@ -184,11 +180,16 @@ int main() {
     cin >> g >> s;
 
     int n = 1;
-    while (true) {
+    while (n <= 70) {
         cout << "STARTING SEARCH: N = " << n << endl;
+
+        // mathematically impossible vertex count
+        if ((3 * n - s) % 2 == 1) {
+            n++;
+            continue;
+        }
+
         start(g, s, n);
         n++;
-
-        if (n == 10) {break;}
     }
 }
