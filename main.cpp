@@ -8,7 +8,7 @@
 
 using namespace std;
 // check if graph satisfies girth constraints by doing BFS from source node
-int check_girth() {
+int check_girth(int start,) {
     return 0; // TODO
 }
 
@@ -49,28 +49,31 @@ int undo_edge(int from, vector<vector<int>>* v, vector<int>* d, int* s) {
     if (to == SEMIEDGE) {
         (*s)++;
     } else {
-        d->at(to)++;
+        d->at(to)--;
     }
 
     return to;
 }
 
-void recursion(const int G, const int N, int s, int p, vector<vector<int>>* v, vector<int>* d) {
+void recursion(const int G, const int N, int s, int p, int min_next, vector<vector<int>>* v, vector<int>* d) {
     while (d->at(p) == 3) {
         p++;
+        min_next = p + 1;
         if (p == N) {
-            cout << "Success" << endl;
-            print_graph(v);
+            if (s == 0) {
+                cout << "Success" << endl;
+                print_graph(v);
+            }
             return;
         }
     }
 
-    int next = p + 1;
+    //int next = p + 1;
+    int next = min_next;
 
     while (next < N) {
 
         if (!v->at(p).empty()) {
-
             if (v->at(p).back() == next) {
                 next++;
                 continue;
@@ -80,7 +83,7 @@ void recursion(const int G, const int N, int s, int p, vector<vector<int>>* v, v
         if (d->at(next) < 3) {
 
             make_edge(p, next, v, d, &s);
-            recursion(G, N, s, p, v, d);
+            recursion(G, N, s, p, next + 1, v, d);
             undo_edge(p, v, d, &s);
 
             // vertex was added - after this it would just make isomorphic graphs
@@ -94,7 +97,7 @@ void recursion(const int G, const int N, int s, int p, vector<vector<int>>* v, v
 
     if (s > 0) {
         make_edge(p, SEMIEDGE, v, d, &s);
-        recursion(G, N, s, p, v, d);
+        recursion(G, N, s, p, next, v, d);
         undo_edge(p, v, d, &s);
     }
 }
@@ -113,7 +116,7 @@ void start (const int G, const int S, const int N) {
         v.at(i).reserve(3);
     }
 
-    recursion(G, N, S, 0, &v, &d);
+    recursion(G, N, S, 0, 1, &v, &d);
 }
 
 
@@ -127,5 +130,7 @@ int main() {
         cout << "STARTING SEARCH: N = " << n << endl;
         start(g, s, n);
         n++;
+
+        if (n == 10) {break;}
     }
 }
