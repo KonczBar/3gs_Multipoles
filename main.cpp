@@ -1,15 +1,59 @@
 #include <cassert>
+#include <deque>
 #include <iostream>
+#include <limits.h>
+#include <unordered_set>
 #include <vector>
 
 #define SEMIEDGE (-1)
 
-// TODO: redundancy with UNDEFINED and degree constraints?
-
 using namespace std;
+
 // check if graph satisfies girth constraints by doing BFS from source node
-int check_girth(int start,) {
-    return 0; // TODO
+// TODO: remember to cite source for this (graph girth algorithm)
+bool check_girth(int start, int G, vector<vector<int>>* v) {
+    if (G <= 3) {
+        return true;
+    }
+
+    int max_depth = 1 + ((G - 1) / 2);    // fast ceiling division G/2
+
+    unordered_set<int> visited;
+    deque<int> unprocessed;
+    vector<int> depth(v->size(), INT_MAX);
+    vector<int> parent(v->size(), -1);
+
+    unprocessed.push_back(start);
+    depth.at(start) = 0;
+
+    while (!unprocessed.empty()) {
+        int next = unprocessed.front();
+        unprocessed.pop_front();
+        visited.insert(next);
+
+        if (depth.at(next) > max_depth) {
+            return true;
+        }
+
+        for (int u : v->at(next)) {
+            if (u == parent.at(next) || u == -1) {
+                continue;
+            }
+
+            // girth check failed
+            if (visited.contains(u)) {
+                if (depth.at(next) + depth.at(u) + 1 < G) {
+                    return false;
+                }
+            } else {
+                parent.at(u) = next;
+                depth.at(u) = depth.at(next) + 1;
+                unprocessed.push_back(u);
+            }
+        }
+    }
+
+    return true;
 }
 
 // debug function
@@ -34,6 +78,7 @@ void make_edge(int from, int to, vector<vector<int>>* v, vector<int>* d, int* s)
         (*s)--;
         assert(*s >= 0);
     } else {
+        v->at(to).push_back(from);
         d->at(to)++;
     }
 }
@@ -49,6 +94,7 @@ int undo_edge(int from, vector<vector<int>>* v, vector<int>* d, int* s) {
     if (to == SEMIEDGE) {
         (*s)++;
     } else {
+        v->at(to).pop_back();
         d->at(to)--;
     }
 
@@ -82,8 +128,12 @@ void recursion(const int G, const int N, int s, int p, int min_next, vector<vect
 
         if (d->at(next) < 3) {
 
+            // the key here is that since no illegal cycles existed before the addition of the edge
+            // any newly formed illegal cycles must include the source vertex
             make_edge(p, next, v, d, &s);
-            recursion(G, N, s, p, next + 1, v, d);
+            if (check_girth(p, G, v)) {
+                recursion(G, N, s, p, next + 1, v, d);
+            }
             undo_edge(p, v, d, &s);
 
             // vertex was added - after this it would just make isomorphic graphs
@@ -96,6 +146,14 @@ void recursion(const int G, const int N, int s, int p, int min_next, vector<vect
     }
 
     if (s > 0) {
+
+        // semi-edge optimization - only adds semi-edges if vertex has no other outgoing edges yet
+        if (!v->at(p).empty()) {
+            if (v->at(p).back() > p) {
+                return;
+            }
+        }
+
         make_edge(p, SEMIEDGE, v, d, &s);
         recursion(G, N, s, p, next, v, d);
         undo_edge(p, v, d, &s);
