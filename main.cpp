@@ -1,16 +1,102 @@
+#include <cassert>
 #include <iostream>
 #include <vector>
 
 #define SEMIEDGE (-1)
-#define UNDEFINED (-2)
 
 // TODO: redundancy with UNDEFINED and degree constraints?
 
 using namespace std;
-
 // check if graph satisfies girth constraints by doing BFS from source node
-int checkGirth() {
+int check_girth() {
     return 0; // TODO
+}
+
+// debug function
+void print_graph(vector<vector<int>>* v) {
+    for (int i = 0; i < v->size(); i++) {
+        cout << i << ": ";
+        for (int c : v->at(i)) {
+            cout << c << " ";
+        }
+        cout << endl;
+    }
+}
+
+void make_edge(int from, int to, vector<vector<int>>* v, vector<int>* d, int* s) {
+    assert(d->at(from) < 3);
+    assert(v->at(from).size() < 3);
+
+    v->at(from).push_back(to);
+    d->at(from)++;
+
+    if (to == SEMIEDGE) {
+        (*s)--;
+        assert(*s >= 0);
+    } else {
+        d->at(to)++;
+    }
+}
+
+int undo_edge(int from, vector<vector<int>>* v, vector<int>* d, int* s) {
+    assert(d->at(from) > 0);
+    assert(d->at(from) > 0);
+
+    int to = v->at(from).back();
+    v->at(from).pop_back();
+    d->at(from)--;
+
+    if (to == SEMIEDGE) {
+        (*s)++;
+    } else {
+        d->at(to)++;
+    }
+
+    return to;
+}
+
+void recursion(const int G, const int N, int s, int p, vector<vector<int>>* v, vector<int>* d) {
+    while (d->at(p) == 3) {
+        p++;
+        if (p == N) {
+            cout << "Success" << endl;
+            print_graph(v);
+            return;
+        }
+    }
+
+    int next = p + 1;
+
+    while (next < N) {
+
+        if (!v->at(p).empty()) {
+
+            if (v->at(p).back() == next) {
+                next++;
+                continue;
+            }
+        }
+
+        if (d->at(next) < 3) {
+
+            make_edge(p, next, v, d, &s);
+            recursion(G, N, s, p, v, d);
+            undo_edge(p, v, d, &s);
+
+            // vertex was added - after this it would just make isomorphic graphs
+            if (d->at(next) == 0) {
+                break;
+            }
+        }
+
+        next++;
+    }
+
+    if (s > 0) {
+        make_edge(p, SEMIEDGE, v, d, &s);
+        recursion(G, N, s, p, v, d);
+        undo_edge(p, v, d, &s);
+    }
 }
 
 
@@ -18,38 +104,28 @@ int checkGirth() {
 // girth G
 // S semi-edges
 // N total vertices
-int start (const int G, const int S, const int N) {
-    vector<vector<int>> v(N);            // adjacency list, only contains u->v for u < v
-    vector<int> h(N, UNDEFINED);    // depths nodes appear at during BFS from vertex 0
-    vector<int> d(N, 0);             // degrees of vertices
+void start (const int G, const int S, const int N) {
+    int s = 0;                              // current number of semi-edges
+    vector<vector<int>> v(N);               // adjacency list, only contains u->v for u < v
+    vector<int> d(N, 0);               // degrees of vertices
 
     for (int i = 0; i < N; i++) {
         v.at(i).reserve(3);
     }
 
-    int p = 0;              // current element
-    int next_depth = 1;     // first element of next depth
-
-    v.at(0).push_back(1); // graph is always initialized to 0 - 1
-    h.at(1) = 1;
-    d.at(0) = 1;
-    d.at(1) = 1;
-
-    while (true) {
-        while (d.at(p) < 3) {
-            //TODO
-        }
-    }
+    recursion(G, N, S, 0, &v, &d);
 }
 
 
-
-
-
-
-
-
-
 int main() {
-    return 0;
+    int g, s;
+
+    cin >> g >> s;
+
+    int n = 1;
+    while (true) {
+        cout << "STARTING SEARCH: N = " << n << endl;
+        start(g, s, n);
+        n++;
+    }
 }
