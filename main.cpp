@@ -70,27 +70,22 @@ void print_graph(vector<vector<int>>* v) {
 
 // creates edge from <-> to in v, where from < to or to is a semi-edge
 // s points to number of semi-edges available
-void make_edge(int from, int to, vector<vector<int>>* v, int* s) {
+void make_edge(const int from, const int to, vector<vector<int>>* v) {
     assert(v->at(from).size() < 3);
 
     v->at(from).push_back(to);
-    if (to == SEMIEDGE) {
-        (*s)--;
-        assert(*s >= 0);
-    } else {
+    if (to != SEMIEDGE) {
         v->at(to).push_back(from);
     }
 }
 
 // removes the edge last added to from in v
 // s points to number of semi-edges
-int undo_edge(int from, vector<vector<int>>* v, int* s) {
+int undo_edge(const int from, vector<vector<int>>* v) {
     int to = v->at(from).back();
     v->at(from).pop_back();
 
-    if (to == SEMIEDGE) {
-        (*s)++;
-    } else {
+    if (to != SEMIEDGE) {
         v->at(to).pop_back();
     }
 
@@ -102,30 +97,21 @@ int undo_edge(int from, vector<vector<int>>* v, int* s) {
  *
  * G - target minimum girth
  * N - total number of vertices
- * S - target number of semi-edges
- * s - current number of semi-edges
  * p - current target vertex
  * min_next - minimum vertex that p could have edge to (helper variable to counteract some isomorphism)
  * v - adjacency list
  */
-void recursion(const int G, const int N, const int S, int s, int p, int min_next, vector<vector<int>>* v) {
+void recursion(const int G, const int N, int p, int min_next, vector<vector<int>>* v) {
     // finds next free stub
     // if none exists, checks success, then returns
     while (v->at(p).size() == 3) {
         p++;
         min_next = p + 1;
         if (p == N) {
-            if (s == 0) {
-                cout << "Graph found:" << endl;
-                print_graph(v);
-            }
+            cout << "Graph found:" << endl;
+            print_graph(v);
             return;
         }
-    }
-
-    // no free stubs left for remaining semi-edges
-    if (3 * N - 2 * (3 * (p - 1) + v->at(p).size()) + S - s < s) {
-        return;
     }
 
     // recursively tries every edge p could have to a vertex of higher index
@@ -149,11 +135,11 @@ void recursion(const int G, const int N, const int S, int s, int p, int min_next
             // the key here is that since no illegal cycles existed before the addition of the edge
             // any newly formed illegal cycles must include p
 
-            make_edge(p, next, v, &s);
+            make_edge(p, next, v);
             if (check_girth(p, G, v)) {
-                recursion(G, N, S, s, p, next, v);
+                recursion(G, N, p, next, v);
             }
-            undo_edge(p, v, &s);
+            undo_edge(p, v);
 
             // if the destination vertex was otherwise completely unused, the cycle will stop
             // (as every vertex after this one is topologically the same and would result in isomorphic graphs)
@@ -164,25 +150,46 @@ void recursion(const int G, const int N, const int S, int s, int p, int min_next
 
         next++;
     }
-
-    // lastly, tries to add a semi-edge, if any are available
-    if (s > 0) {
-
-        // semi-edge optimization - only adds semi-edges if vertex has no other outgoing edges yet
-        // (outgoing = to a vertex of higher index)
-        if (!v->at(p).empty()) {
-            if (v->at(p).back() > p) {
-                return;
-            }
-        }
-
-        // adding semi-edge does not impact girth
-        make_edge(p, SEMIEDGE, v, &s);
-        recursion(G, N, S, s, p, next, v);
-        undo_edge(p, v, &s);
-    }
 }
 
+void assign_semiedges(const int G, const int N, int s, int p, vector<vector<int>>* v) {
+    if (p == N) {
+        return;
+    }
+
+    // adds a semi-edge
+    make_edge(p, SEMIEDGE, v);
+    s--;
+
+    if (s == 0) {
+        //cout << "Calling recursion on: " << endl;
+        //print_graph(v);
+        recursion(G, N, 0, 1, v);
+        undo_edge(p, v);
+        return;
+    }
+
+    // recursive branch for adding another semi-edge to the same vertex
+    // semi-edge counts for vertices are in descending order. Vertex cannot have more semi-edges than predecessor.
+    if (v->at(p).size() < 3) {
+        if (p == 0) {
+            assign_semiedges(G, N, s, p, v);
+        } else {
+             if (v->at(p - 1).size() > v->at(p).size()) {
+                 assign_semiedges(G, N, s, p, v);
+             }
+        }
+    }
+
+    // recursive branch for not adding another semi-edge to the same vertex
+    // (only if the current one has at least one, so that they are all in sequence, next to each other)
+    if (v->at(p).size() > 0) {
+        assign_semiedges(G, N, s, p + 1, v);
+    }
+
+    // removing
+    undo_edge(p, v);
+}
 
 // initializes recursion for searching for multipoles with the characteristics:
 // girth G
@@ -190,13 +197,16 @@ void recursion(const int G, const int N, const int S, int s, int p, int min_next
 // N total vertices
 void start (const int G, const int S, const int N) {
     vector<vector<int>> v(N);               // adjacency list
-    vector<int> d(N, 0);               // degrees of vertices
 
     for (int i = 0; i < N; i++) {
         v.at(i).reserve(3);
     }
 
-    recursion(G, N, S, S, 0, 1, &v);
+    if (S == 0) {
+        recursion(G, N, 0, 1, &v);
+    } else {
+        assign_semiedges(G, N, S, 0, &v);
+    }
 }
 
 // driver code
@@ -206,7 +216,7 @@ int main() {
     cin >> g >> s;
 
     int n = 1;
-    while (n <= 70) {
+    while (n <= 10) {
         cout << "STARTING SEARCH: N = " << n << endl;
 
         // mathematically impossible vertex count
